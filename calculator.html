@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>calculator</title>
+    <style>
+        @keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes buttonHover {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes buttonActive {
+  from {
+    transform: scale(1.05);
+  }
+  to {
+    transform: scale(0.95);
+  }
+}
+
+body {
+  width: 500px;
+  margin: 4% auto;
+  font-family: 'Source Sans Pro', sans-serif;
+  letter-spacing: 2px;
+  font-size: 1.6rem;
+  background-color: #2c2c2c;
+  color: #e0e0e0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 1s ease-out;
+}
+
+.calculator {
+  padding: 20px;
+  background-color: #3c3c3c;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
+
+.input {
+  border: 1px solid #555;
+  border-radius: 5px;
+  height: 60px;
+  padding-right: 15px;
+  padding-top: 10px;
+  text-align: right;
+  margin-bottom: 20px;
+  font-size: 2.5rem;
+  overflow-x: auto;
+  transition: all 0.2s ease-in-out;
+  background-color: #444;
+  color: #e0e0e0;
+  box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.input:hover {
+  border-color: #777;
+  box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+.operators div, .numbers div, div.equal {
+  display: inline-block;
+  border: 1px solid #666;
+  border-radius: 5px;
+  width: 80px;
+  text-align: center;
+  padding: 10px;
+  margin: 10px 4px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: #555;
+  color: #e0e0e0;
+}
+
+.operators div:hover, .numbers div:hover, div.equal:hover {
+  background-color: #666;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.7);
+  border-color: #888;
+  animation: buttonHover 0.2s forwards;
+}
+
+.operators div:active, .numbers div:active, div.equal:active {
+  font-weight: bold;
+  box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.7);
+  animation: buttonActive 0.1s forwards;
+}
+
+.numbers div {
+  background-color: #444;
+}
+
+.equal {
+  border: 1px solid #1a73e8;
+  width: 17%;
+  padding: 127px 10px;
+  vertical-align: top;
+  color: #FFF;
+  background-color: #4285f4;
+  transition: all 0.2s ease-in-out;
+}
+
+.equal:hover {
+  background-color: #357ae8;
+  border-color: #1a5bb8;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.7);
+  animation: buttonHover 0.2s forwards;
+}
+
+.leftPanel {
+  display: inline-block;
+  width: 80%;
+  vertical-align: top;
+}
+
+.rightPanel {
+  display: inline-block;
+  width: 20%;
+  vertical-align: top;
+}
+
+.clear {
+  display: inline-block;
+  border: 1px solid #e53935;
+  border-radius: 5px;
+  width: 80px;
+  text-align: center;
+  padding: 10px;
+  margin: 10px 4px;
+  cursor: pointer;
+  color: #FFF;
+  background-color: #e53935;
+  transition: all 0.2s ease-in-out;
+}
+
+.clear:hover {
+  background-color: #d32f2f;
+  border-color: #b71c1c;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.7);
+  animation: buttonHover 0.2s forwards;
+}
+
+.clear:active {
+  font-weight: bold;
+  box-shadow: inset 0px 1px 4px rgba(0, 0, 0, 0.7);
+  animation: buttonActive 0.1s forwards;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="input" id="input"></div>
+        <div class="buttons">
+          <div class="operators">
+            <div>+</div>
+            <div>-</div>
+            <div>&times;</div>
+            <div>&divide;</div>
+          </div>
+          <div class="leftPanel">
+            <div class="numbers">
+              <div>7</div>
+              <div>8</div>
+              <div>9</div>
+            </div>
+            <div class="numbers">
+              <div>4</div>
+              <div>5</div>
+              <div>6</div>
+            </div>
+            <div class="numbers">
+              <div>1</div>
+              <div>2</div>
+              <div>3</div>
+            </div>
+            <div class="numbers">
+              <div>0</div>
+              <div>.</div>
+              <div id="clear">C</div>
+            </div>
+          </div>
+          <div class="equal" id="result">=</div>
+        </div>
+      </div>
+      <script>
+        "use strict";
+
+var input = document.getElementById('input'), 
+  number = document.querySelectorAll('.numbers div'), 
+  operator = document.querySelectorAll('.operators div'), 
+  result = document.getElementById('result'), 
+  clear = document.getElementById('clear'), 
+  resultDisplayed = false; 
+
+for (var i = 0; i < number.length; i++) {
+  number[i].addEventListener("click", function(e) {
+
+    var currentString = input.innerHTML;
+    var lastChar = currentString[currentString.length - 1];
+
+    if (resultDisplayed === false) {
+      input.innerHTML += e.target.innerHTML;
+    } else if (resultDisplayed === true && lastChar === "+" || lastChar === "-" || lastChar === "×" || lastChar === "÷") {
+      resultDisplayed = false;
+      input.innerHTML += e.target.innerHTML;
+    } else {
+      
+      resultDisplayed = false;
+      input.innerHTML = "";
+      input.innerHTML += e.target.innerHTML;
+    }
+
+  });
+}
+
+for (var i = 0; i < operator.length; i++) {
+  operator[i].addEventListener("click", function(e) {
+
+    var currentString = input.innerHTML;
+    var lastChar = currentString[currentString.length - 1];
+
+    if (lastChar === "+" || lastChar === "-" || lastChar === "×" || lastChar === "÷") {
+      var newString = currentString.substring(0, currentString.length - 1) + e.target.innerHTML;
+      input.innerHTML = newString;
+    } else if (currentString.length == 0) {
+      console.log("enter a number first");
+    } else {
+      input.innerHTML += e.target.innerHTML;
+    }
+
+  });
+}
+
+result.addEventListener("click", function() {
+
+  var inputString = input.innerHTML;
+
+  var numbers = inputString.split(/\+|\-|\×|\÷/g);
+
+  var operators = inputString.replace(/[0-9]|\./g, "").split("");
+
+  console.log(inputString);
+  console.log(operators);
+  console.log(numbers);
+  console.log("----------------------------");
+
+
+  var divide = operators.indexOf("÷");
+  while (divide != -1) {
+    numbers.splice(divide, 2, numbers[divide] / numbers[divide + 1]);
+    operators.splice(divide, 1);
+    divide = operators.indexOf("÷");
+  }
+
+  var multiply = operators.indexOf("×");
+  while (multiply != -1) {
+    numbers.splice(multiply, 2, numbers[multiply] * numbers[multiply + 1]);
+    operators.splice(multiply, 1);
+    multiply = operators.indexOf("×");
+  }
+
+  var subtract = operators.indexOf("-");
+  while (subtract != -1) {
+    numbers.splice(subtract, 2, numbers[subtract] - numbers[subtract + 1]);
+    operators.splice(subtract, 1);
+    subtract = operators.indexOf("-");
+  }
+
+  var add = operators.indexOf("+");
+  while (add != -1) {
+    numbers.splice(add, 2, parseFloat(numbers[add]) + parseFloat(numbers[add + 1]));
+    operators.splice(add, 1);
+    add = operators.indexOf("+");
+  }
+
+  input.innerHTML = numbers[0]; 
+
+  resultDisplayed = true; 
+});
+
+clear.addEventListener("click", function() {
+  input.innerHTML = "";
+})
+      </script>
+</body>
+</html>
